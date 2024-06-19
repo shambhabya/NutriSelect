@@ -179,19 +179,20 @@ export default function Calculator() {
                   </FormControl>
                   <SelectContent>
                     <SelectItem value="sedentary">
-                      Little Or No activity
+                      Little or no Activity
                     </SelectItem>
                     <SelectItem value="lightly_active">
-                      activity 1-3 times/week
+                      Lightly Active(light exercise/sports 1-3 days/week)
                     </SelectItem>
                     <SelectItem value="moderately_active">
-                      Moderately activite or Intense activity 3-4 times/week
+                      Moderately active(Moderate exercise/spots 3-5 days per
+                      week)
                     </SelectItem>
                     <SelectItem value="very_active">
-                      activity 4-5 times/week
+                      Very active(Hard exercise/sports 6-7 days a week)
                     </SelectItem>
                     <SelectItem value="super_active">
-                      Intense activity everyday
+                      Super active(Intense exercise everyday)
                     </SelectItem>
                   </SelectContent>
                 </Select>

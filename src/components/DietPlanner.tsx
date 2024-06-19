@@ -9,69 +9,49 @@ const DietPlanner = () => {
   const [dietTime, setDietTime] = useState("morning");
   const [calorieCount, setTotalCalorieCount] = useState({
     totalRequiredCalories: 0,
-    totalRequiredCaloriedCompleted: 0,
     breakfast: {
       requiredFats: 0,
-      completedFats: 0,
       requiredProtein: 0,
-      completedProtein: 0,
       requiredCarbs: 0,
-      completedCarbs: 0,
     },
     lunch: {
       requiredFats: 0,
-      completedFats: 0,
       requiredProtein: 0,
-      completedProtein: 0,
       requiredCarbs: 0,
-      completedCarbs: 0,
     },
     dinner: {
       requiredFats: 0,
-      completedFats: 0,
       requiredProtein: 0,
-      completedProtein: 0,
       requiredCarbs: 0,
-      completedCarbs: 0,
     },
   });
 
-  //   useEffect(() => {
-  //     const {
-  //       totalCaloricIntake,
-  //       proteinCalorieIntake,
-  //       carbsCalorieIntake,
-  //       fatsCalorieIntake,
-  //     } = dietItems;
-  //     setTotalCalorieCount({
-  //       totalRequiredCalories: totalCaloricIntake,
-  //       totalRequiredCaloriedCompleted: 0,
-  //       breakfast: {
-  //         requiredFats: Math.round(0.3 * fatsCalorieIntake),
-  //         completedFats: 0,
-  //         requiredProtein: Math.round(0.3 * proteinCalorieIntake),
-  //         completedProtein: 0,
-  //         requiredCarbs: Math.round(0.3 * carbsCalorieIntake),
-  //         completedCarbs: 0,
-  //       },
-  //       lunch: {
-  //         requiredFats: Math.round(0.35 * fatsCalorieIntake),
-  //         completedFats: 0,
-  //         requiredProtein: Math.round(0.35 * proteinCalorieIntake),
-  //         completedProtein: 0,
-  //         requiredCarbs: Math.round(0.35 * carbsCalorieIntake),
-  //         completedCarbs: 0,
-  //       },
-  //       dinner: {
-  //         requiredFats: Math.round(0.35 * fatsCalorieIntake),
-  //         completedFats: 0,
-  //         requiredProtein: Math.round(0.35 * proteinCalorieIntake),
-  //         completedProtein: 0,
-  //         requiredCarbs: Math.round(0.35 * carbsCalorieIntake),
-  //         completedCarbs: 0,
-  //       },
-  //     });
-  //   }, [dietItems]);
+  useEffect(() => {
+    const {
+      totalCaloricIntake,
+      proteinCalorieIntake,
+      carbsCalorieIntake,
+      fatsCalorieIntake,
+    } = dietItems;
+    setTotalCalorieCount({
+      totalRequiredCalories: totalCaloricIntake,
+      breakfast: {
+        requiredFats: Math.round(0.3 * fatsCalorieIntake),
+        requiredProtein: Math.round(0.3 * proteinCalorieIntake),
+        requiredCarbs: Math.round(0.3 * carbsCalorieIntake),
+      },
+      lunch: {
+        requiredFats: Math.round(0.35 * fatsCalorieIntake),
+        requiredProtein: Math.round(0.35 * proteinCalorieIntake),
+        requiredCarbs: Math.round(0.35 * carbsCalorieIntake),
+      },
+      dinner: {
+        requiredFats: Math.round(0.35 * fatsCalorieIntake),
+        requiredProtein: Math.round(0.35 * proteinCalorieIntake),
+        requiredCarbs: Math.round(0.35 * carbsCalorieIntake),
+      },
+    });
+  }, [dietItems]);
 
   return (
     <div className=" h-screen ">
@@ -123,9 +103,6 @@ const DietPlanner = () => {
             <DietBar
               calorieCount={calorieCount.breakfast}
               totalRequiredCalories={calorieCount.totalRequiredCalories}
-              totalRequiredCaloriedCompleted={
-                calorieCount.totalRequiredCaloriedCompleted
-              }
               dietTime={"breakfast"}
             />
           )}
@@ -133,9 +110,6 @@ const DietPlanner = () => {
             <DietBar
               calorieCount={calorieCount.lunch}
               totalRequiredCalories={calorieCount.totalRequiredCalories}
-              totalRequiredCaloriedCompleted={
-                calorieCount.totalRequiredCaloriedCompleted
-              }
               dietTime={"lunch"}
             />
           )}
@@ -143,9 +117,6 @@ const DietPlanner = () => {
             <DietBar
               calorieCount={calorieCount.dinner}
               totalRequiredCalories={calorieCount.totalRequiredCalories}
-              totalRequiredCaloriedCompleted={
-                calorieCount.totalRequiredCaloriedCompleted
-              }
               dietTime={"dinner"}
             />
           )}

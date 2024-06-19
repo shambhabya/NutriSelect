@@ -1,3 +1,4 @@
+import { useDietContext } from "@/context/dietDataContext";
 import { useMyDietContext } from "@/context/myDietContext";
 import React, { useEffect } from "react";
 
@@ -25,57 +26,67 @@ const DietOptions: React.FC<{
   dietTime: string;
 }> = ({ diet, dietTime }) => {
   const { myDiet, setMyDiet } = useMyDietContext();
+  const { dietItems } = useDietContext();
 
   useEffect(() => {
-    console.log(myDiet);
+    console.log("2");
   }, [myDiet]);
+
+  // useEffect(() => {
+  //   console.log("2");
+  // }, [dietItems]);
 
   const updateMyDiet = (itemName: string, operation: string) => {
     setMyDiet((prevMyDiet) => {
+      // Creating a copy of the previous state to avoid direct mutation
+      const newDiet = { ...prevMyDiet };
+
       switch (dietTime) {
         case "morning":
+          newDiet.breakfastItems = { ...newDiet.breakfastItems };
           if (operation === "increment") {
-            prevMyDiet.breakfastItems[itemName] =
-              (prevMyDiet.breakfastItems[itemName] || 0) + 1;
+            newDiet.breakfastItems[itemName] =
+              (newDiet.breakfastItems[itemName] || 0) + 1;
           } else if (
             operation === "decrement" &&
-            (prevMyDiet.breakfastItems[itemName] || 0) > 0
+            (newDiet.breakfastItems[itemName] || 0) > 0
           ) {
-            prevMyDiet.breakfastItems[itemName] =
-              (prevMyDiet.breakfastItems[itemName] || 0) - 1;
+            newDiet.breakfastItems[itemName] =
+              (newDiet.breakfastItems[itemName] || 0) - 1;
           }
           break;
         case "afternoon":
+          newDiet.lunchItems = { ...newDiet.lunchItems };
           if (operation === "increment") {
-            prevMyDiet.lunchItems[itemName] =
-              (prevMyDiet.lunchItems[itemName] || 0) + 1;
+            newDiet.lunchItems[itemName] =
+              (newDiet.lunchItems[itemName] || 0) + 1;
           } else if (
             operation === "decrement" &&
-            (prevMyDiet.lunchItems[itemName] || 0) > 0
+            (newDiet.lunchItems[itemName] || 0) > 0
           ) {
-            prevMyDiet.lunchItems[itemName] =
-              (prevMyDiet.lunchItems[itemName] || 0) - 1;
+            newDiet.lunchItems[itemName] =
+              (newDiet.lunchItems[itemName] || 0) - 1;
           }
           break;
         case "night":
+          newDiet.dinnerItems = { ...newDiet.dinnerItems };
           if (operation === "increment") {
-            prevMyDiet.dinnerItems[itemName] =
-              (prevMyDiet.dinnerItems[itemName] || 0) + 1;
+            newDiet.dinnerItems[itemName] =
+              (newDiet.dinnerItems[itemName] || 0) + 1;
           } else if (
             operation === "decrement" &&
-            (prevMyDiet.dinnerItems[itemName] || 0) > 0
+            (newDiet.dinnerItems[itemName] || 0) > 0
           ) {
-            prevMyDiet.dinnerItems[itemName] =
-              (prevMyDiet.dinnerItems[itemName] || 0) - 1;
+            newDiet.dinnerItems[itemName] =
+              (newDiet.dinnerItems[itemName] || 0) - 1;
           }
           break;
         default:
           break;
       }
 
-      return prevMyDiet;
+      return newDiet;
     });
-    console.log(myDiet);
   };
 
   return (

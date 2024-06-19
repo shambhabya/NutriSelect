@@ -35,7 +35,8 @@ const ProgressBar: React.FC<ProgressBarProps> = ({
         </div>
       </div>
       <div className="font-medium text-gray-500 dark:text-gray-400">
-        {calorie}/{totalCalorie} calories
+        {calorie}/{totalCalorie}{" "}
+        {item === "Total Daily Calories" ? "calories" : "gm"}
       </div>
     </div>
   );

@@ -19,9 +19,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <DietDataProvider>
-          <DietProvider>{children}</DietProvider>
-        </DietDataProvider>
+        <DietProvider>
+          <DietDataProvider>{children}</DietDataProvider>
+        </DietProvider>
       </body>
     </html>
   );

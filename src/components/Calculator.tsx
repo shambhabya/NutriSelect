@@ -23,8 +23,14 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Checkbox } from "./ui/checkbox";
+import { useDietContext } from "@/context/dietDataContext";
+import axios from "axios";
 
-const items = [
+const diseases = [
+  {
+    id: "no disease",
+    label: "no disease",
+  },
   {
     id: "diabetes",
     label: "diabetes",
@@ -39,42 +45,48 @@ const items = [
   },
 ] as const;
 
-const formSchema = z.object({
-  Age: z.coerce.number().gt(0).lt(80).int(),
-  Weight: z.coerce.number().gt(0),
-  Height: z.coerce.number().gt(0),
-  Gender: z.enum(["male", "female"]),
-  ExerciseLevel: z.enum(["0", "1", "2", "3", "4", "5"]),
-  VegNonVeg: z.enum(["veg", "nonVeg"]),
-  //   Disease: z.enum([
-  //     "",
-  //     "diabetes",
-  //     "lactose intolerant",
-  //     "gastrogenical reflux",
-  //   ]),
-  items: z.array(z.string()).refine((value) => value.some((item) => item), {
+export const formSchema = z.object({
+  age: z.coerce.number().gt(0).lt(80).int(),
+  weight: z.coerce.number().gt(0),
+  height: z.coerce.number().gt(0),
+  gender: z.enum(["male", "female"]),
+  activityLevel: z.enum([
+    "sedentary",
+    "lightly_active",
+    "moderately_active",
+    "very_active",
+    "super_active",
+  ]),
+  vegNonVeg: z.enum(["veg", "nonVeg"]),
+  diseases: z.array(z.string()).refine((value) => value.some((item) => item), {
     message: "You have to select at least one item.",
   }),
 });
 
 export default function Calculator() {
-  // ...
-  // 1. Define your form.
+  const { dietItems, setDietItems } = useDietContext();
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      Age: 0,
-      Weight: 0,
-      Height: 0,
-      items: [],
+      age: 0,
+      weight: 0,
+      height: 0,
+      diseases: [],
     },
   });
 
   // 2. Define a submit handler.
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    // Do something with the form values.
-    // ✅ This will be type-safe and validated.
+  async function onSubmit(values: z.infer<typeof formSchema>) {
     console.log(values);
+    const newValues = values;
+    try {
+      const res = await axios.post("/api", values);
+      console.log(res.data);
+      setDietItems(res.data);
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   return (
@@ -86,7 +98,7 @@ export default function Calculator() {
         <div className="flex">
           <FormField
             control={form.control}
-            name="Age"
+            name="age"
             render={({ field }) => (
               <FormItem className="p-1">
                 <FormLabel>Age</FormLabel>
@@ -100,7 +112,7 @@ export default function Calculator() {
           />
           <FormField
             control={form.control}
-            name="Weight"
+            name="weight"
             render={({ field }) => (
               <FormItem className="p-1">
                 <FormLabel>Weight</FormLabel>
@@ -113,7 +125,7 @@ export default function Calculator() {
           />
           <FormField
             control={form.control}
-            name="Height"
+            name="height"
             render={({ field }) => (
               <FormItem className="p-1">
                 <FormLabel>Height</FormLabel>
@@ -128,7 +140,7 @@ export default function Calculator() {
         <div className="flex">
           <FormField
             control={form.control}
-            name="Gender"
+            name="gender"
             render={({ field }) => (
               <FormItem className="w-full p-1">
                 <FormLabel>Gender</FormLabel>
@@ -152,30 +164,35 @@ export default function Calculator() {
           />
           <FormField
             control={form.control}
-            name="ExerciseLevel"
+            name="activityLevel"
             render={({ field }) => (
               <FormItem className="w-full p-1">
-                <FormLabel>Exercise Level</FormLabel>
+                <FormLabel>activity Level</FormLabel>
                 <Select
                   onValueChange={field.onChange}
                   defaultValue={field.value}
                 >
                   <FormControl>
                     <SelectTrigger>
-                      <SelectValue placeholder="Select your exercise level" />
+                      <SelectValue placeholder="Select your activity level" />
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>
-                    <SelectItem value="0">Little Or No Exercise</SelectItem>
-                    <SelectItem value="1">Exercise 1-3 times/week</SelectItem>
-                    <SelectItem value="2">
-                      Exercise or Intense Exercise 3-4 times/week
+                    <SelectItem value="sedentary">
+                      Little Or No activity
                     </SelectItem>
-                    <SelectItem value="3">Exercise 4-5 times/week</SelectItem>
-                    <SelectItem value="4">
-                      Intense Exercise 4-5 times/week
+                    <SelectItem value="lightly_active">
+                      activity 1-3 times/week
                     </SelectItem>
-                    <SelectItem value="5">Intense Exercise Daily</SelectItem>
+                    <SelectItem value="moderately_active">
+                      Moderately activite or Intense activity 3-4 times/week
+                    </SelectItem>
+                    <SelectItem value="very_active">
+                      activity 4-5 times/week
+                    </SelectItem>
+                    <SelectItem value="super_active">
+                      Intense activity everyday
+                    </SelectItem>
                   </SelectContent>
                 </Select>
 
@@ -186,7 +203,7 @@ export default function Calculator() {
         </div>
         <FormField
           control={form.control}
-          name="VegNonVeg"
+          name="vegNonVeg"
           render={({ field }) => (
             <FormItem className="p-1">
               <FormLabel>Veg/Non-Veg</FormLabel>
@@ -208,7 +225,7 @@ export default function Calculator() {
         />
         <FormField
           control={form.control}
-          name="items"
+          name="diseases"
           render={() => (
             <FormItem className="p-1">
               <div className="mb-4">
@@ -219,11 +236,11 @@ export default function Calculator() {
                 </FormDescription>
               </div>
               <div className="flex ">
-                {items.map((item) => (
+                {diseases.map((item) => (
                   <FormField
                     key={item.id}
                     control={form.control}
-                    name="items"
+                    name="diseases"
                     render={({ field }) => {
                       return (
                         <FormItem

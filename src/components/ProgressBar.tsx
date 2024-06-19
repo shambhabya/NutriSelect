@@ -6,10 +6,10 @@ type ProgressBarProps = {
   item: string;
 };
 
-const getColor = (progress: number): string => {
-  if (progress < 50) {
+const getColor = (progress: number, totalCalorie: number): string => {
+  if (progress < totalCalorie / 2) {
     return "bg-red-500";
-  } else if (progress < 75) {
+  } else if (progress < (3 * totalCalorie) / 4) {
     return "bg-yellow-500";
   } else {
     return "bg-green-500";
@@ -21,7 +21,7 @@ const ProgressBar: React.FC<ProgressBarProps> = ({
   totalCalorie,
   item,
 }) => {
-  const colorClass = getColor(calorie);
+  const colorClass = getColor(calorie, totalCalorie);
 
   return (
     <div className="flex flex-col items-center gap-2">

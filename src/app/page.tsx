@@ -1,16 +1,18 @@
+"use client";
 import Calculator from "@/components/Calculator";
 import DietPlanner from "@/components/DietPlanner";
 import Navbar from "@/components/Navbar";
-import ProgressBar from "@/components/ProgressBar";
-import { DietDataProvider } from "@/context/dietDataContext";
+import { useDietContext } from "@/context/dietDataContext";
+import { useEffect, useState } from "react";
 
 export default function Home() {
+  const { dietItems } = useDietContext();
+
   return (
-    <DietDataProvider>
-      <main className=" h-screen bg-green-200">
-        <Navbar />
-        <DietPlanner />
-      </main>
-    </DietDataProvider>
+    <main className="h-screen bg-green-200 overflow-scroll">
+      <Navbar />
+      <Calculator />
+      <DietPlanner />
+    </main>
   );
 }

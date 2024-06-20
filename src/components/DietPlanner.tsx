@@ -6,7 +6,11 @@ import { useMyDietContext } from "@/context/myDietContext";
 
 const DietPlanner = () => {
   const { dietItems } = useDietContext();
+  const { myDiet } = useMyDietContext();
+
   const [dietTime, setDietTime] = useState("morning");
+  const [totalRequiredCaloriesCompleted, setTotalRequiredCaloriesCompleted] =
+    useState(0);
   const [calorieCount, setTotalCalorieCount] = useState({
     totalRequiredCalories: 0,
     breakfast: {
@@ -53,34 +57,60 @@ const DietPlanner = () => {
     });
   }, [dietItems]);
 
+  useEffect(() => {
+    const calculateTotalCalories = (myDiet: any): number => {
+      let totalCalories = 0;
+
+      const addCalories = (items: any) => {
+        Object.values(items).forEach((item: any) => {
+          totalCalories += item.calories * item.count;
+        });
+      };
+
+      addCalories(myDiet.breakfastItems);
+      addCalories(myDiet.lunchItems);
+      addCalories(myDiet.dinnerItems);
+
+      return Math.round(totalCalories);
+    };
+
+    setTotalRequiredCaloriesCompleted(calculateTotalCalories(myDiet));
+  }, [myDiet]);
+
   return (
     <div className=" h-screen ">
-      <div className="py-2 px-10 text-2xl font-bold text-red-400">
+      <div className="py-2 px-10 text-3xl font-bold text-red-400">
         Diet Planner
       </div>
       <div className="pb-2 px-10 ">
-        Your calculated BMI is {dietItems.bmi}, which shows you are
-        {dietItems.interpretation}. Based on your BMI and calculated BMR, your
-        daily calorie need is {dietItems.totalCaloricIntake} calories, which
-        will help to keep you maintain a healthy and fit body.
+        Your BMI is {dietItems.bmi}, indicating you are{" "}
+        {dietItems.interpretation}. Considering your BMI and calculated BMR,
+        your daily calorie requirement is {dietItems.totalCaloricIntake}{" "}
+        calories. This intake will support maintaining a healthy and fit body.
       </div>
       <div className="flex w-full px-10 h-4/5">
         <div className="flex flex-col w-5/6 bg-white mr-1 my-3  rounded-lg border-2">
           <div className="flex justify-between ">
             <div
-              className=" bg-slate-200 py-2 pl-28 w-full border-b-2 border-r cursor-pointer"
+              className={`py-2 pl-28 w-full border-b-2 border-r cursor-pointer ${
+                dietTime === "morning" ? "bg-slate-400" : "bg-slate-100"
+              }`}
               onClick={() => setDietTime("morning")}
             >
               Breakfast
             </div>
             <div
-              className=" bg-slate-100 py-2 pl-28 w-full border-b cursor-pointer"
+              className={`py-2 pl-28 w-full border-b cursor-pointer ${
+                dietTime === "afternoon" ? "bg-slate-400" : "bg-slate-100"
+              }`}
               onClick={() => setDietTime("afternoon")}
             >
               Lunch
             </div>
             <div
-              className=" bg-slate-100 py-2 pl-28 w-full border-b-2 border-l-2 cursor-pointer"
+              className={`py-2 pl-28 w-full border-b-2 border-r cursor-pointer ${
+                dietTime === "night" ? "bg-slate-400" : "bg-slate-100"
+              }`}
               onClick={() => setDietTime("night")}
             >
               Dinner
@@ -104,6 +134,8 @@ const DietPlanner = () => {
               calorieCount={calorieCount.breakfast}
               totalRequiredCalories={calorieCount.totalRequiredCalories}
               dietTime={"breakfast"}
+              setTotalCalorieCount={setTotalCalorieCount}
+              completedTotalCalorie={totalRequiredCaloriesCompleted}
             />
           )}
           {dietTime === "afternoon" && (
@@ -111,6 +143,8 @@ const DietPlanner = () => {
               calorieCount={calorieCount.lunch}
               totalRequiredCalories={calorieCount.totalRequiredCalories}
               dietTime={"lunch"}
+              setTotalCalorieCount={setTotalCalorieCount}
+              completedTotalCalorie={totalRequiredCaloriesCompleted}
             />
           )}
           {dietTime === "night" && (
@@ -118,6 +152,8 @@ const DietPlanner = () => {
               calorieCount={calorieCount.dinner}
               totalRequiredCalories={calorieCount.totalRequiredCalories}
               dietTime={"dinner"}
+              setTotalCalorieCount={setTotalCalorieCount}
+              completedTotalCalorie={totalRequiredCaloriesCompleted}
             />
           )}
         </div>

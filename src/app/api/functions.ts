@@ -26,9 +26,9 @@ export function calculateBMR(
   gender: "male" | "female"
 ): number {
   if (gender === "male") {
-    return 88.362 + 13.397 * weight + 4.799 * height - 5.677 * age;
+    return 66.5 + 13.75 * weight + 5.033 * height - 6.75 * age;
   } else {
-    return 447.593 + 9.247 * weight + 3.098 * height - 4.33 * age;
+    return 655.1 + 9.563 * weight + 1.85 * height - 4.676 * age;
   }
 }
 
@@ -59,34 +59,39 @@ export function determineCaloricIntake(bmi: number, amr: number): number {
   }
 }
 
-export function getMeals(foodData: FoodItem[]) {
+export function getMeals(foodData: FoodItem[], vegNonVeg: string) {
   const meals: Meals = {
     Breakfast: {},
     Lunch: {},
-    Snacks: {},
     Dinner: {},
   };
 
   foodData.forEach((food) => {
     if (food.Breakfast === 1) {
+      if (vegNonVeg === "veg" && food.VegNonVeg === 1) {
+        // Skip non-vegetarian food when vegNonVeg is "veg"
+        return;
+      }
       if (!meals.Breakfast[food.Category]) {
         meals.Breakfast[food.Category] = [];
       }
       meals.Breakfast[food.Category].push(food);
     }
     if (food.Lunch === 1) {
+      if (vegNonVeg === "veg" && food.VegNonVeg === 1) {
+        // Skip non-vegetarian food when vegNonVeg is "veg"
+        return;
+      }
       if (!meals.Lunch[food.Category]) {
         meals.Lunch[food.Category] = [];
       }
       meals.Lunch[food.Category].push(food);
     }
-    if (food.Snacks === 1) {
-      if (!meals.Snacks[food.Category]) {
-        meals.Snacks[food.Category] = [];
-      }
-      meals.Snacks[food.Category].push(food);
-    }
     if (food.Dinner === 1) {
+      if (vegNonVeg === "veg" && food.VegNonVeg === 1) {
+        // Skip non-vegetarian food when vegNonVeg is "veg"
+        return;
+      }
       if (!meals.Dinner[food.Category]) {
         meals.Dinner[food.Category] = [];
       }

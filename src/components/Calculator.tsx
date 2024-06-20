@@ -25,6 +25,7 @@ import {
 import { Checkbox } from "./ui/checkbox";
 import { useDietContext } from "@/context/dietDataContext";
 import axios from "axios";
+import { useMyDietContext } from "@/context/myDietContext";
 
 const diseases = [
   {
@@ -40,13 +41,13 @@ const diseases = [
     label: "lactose intolerant",
   },
   {
-    id: "gastogenical reflux",
-    label: "gastorgenical reflux",
+    id: "thyroid",
+    label: "thyroid",
   },
 ] as const;
 
 export const formSchema = z.object({
-  age: z.coerce.number().gt(0).lt(80).int(),
+  age: z.coerce.number().gt(15).lt(80).int(),
   weight: z.coerce.number().gt(0),
   height: z.coerce.number().gt(0),
   gender: z.enum(["male", "female"]),
@@ -63,7 +64,7 @@ export const formSchema = z.object({
   }),
 });
 
-export default function Calculator() {
+export default function Calculator({ myDisease, setMyDisease }: any) {
   const { dietItems, setDietItems } = useDietContext();
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -76,6 +77,8 @@ export default function Calculator() {
     },
   });
 
+  const { myDiet, setMyDiet } = useMyDietContext();
+
   // 2. Define a submit handler.
   async function onSubmit(values: z.infer<typeof formSchema>) {
     console.log(values);
@@ -84,6 +87,12 @@ export default function Calculator() {
       const res = await axios.post("/api", values);
       console.log(res.data);
       setDietItems(res.data);
+      setMyDiet({
+        breakfastItems: {},
+        lunchItems: {},
+        dinnerItems: {},
+      });
+      setMyDisease(values.diseases);
     } catch (error) {
       console.log(error);
     }
@@ -93,7 +102,7 @@ export default function Calculator() {
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
-        className="space-y-8 w-3/5 p-10"
+        className="space-y-8 w-3/5 p-10 m-5  border-2  bg-slate-300 rounded-md"
       >
         <div className="flex">
           <FormField
@@ -115,7 +124,7 @@ export default function Calculator() {
             name="weight"
             render={({ field }) => (
               <FormItem className="p-1">
-                <FormLabel>Weight</FormLabel>
+                <FormLabel>Weight (kg)</FormLabel>
                 <FormControl>
                   <Input placeholder="Weight(kg)" {...field} />
                 </FormControl>
@@ -128,7 +137,7 @@ export default function Calculator() {
             name="height"
             render={({ field }) => (
               <FormItem className="p-1">
-                <FormLabel>Height</FormLabel>
+                <FormLabel>Height (cm)</FormLabel>
                 <FormControl>
                   <Input placeholder="Height(cm)" {...field} />
                 </FormControl>
@@ -167,7 +176,7 @@ export default function Calculator() {
             name="activityLevel"
             render={({ field }) => (
               <FormItem className="w-full p-1">
-                <FormLabel>activity Level</FormLabel>
+                <FormLabel>Activity Level</FormLabel>
                 <Select
                   onValueChange={field.onChange}
                   defaultValue={field.value}
@@ -179,20 +188,20 @@ export default function Calculator() {
                   </FormControl>
                   <SelectContent>
                     <SelectItem value="sedentary">
-                      Little or no Activity
+                      Little or No Activity
                     </SelectItem>
                     <SelectItem value="lightly_active">
-                      Lightly Active(light exercise/sports 1-3 days/week)
+                      Lightly Active (Light exercise/sports 1-3 days/week)
                     </SelectItem>
                     <SelectItem value="moderately_active">
-                      Moderately active(Moderate exercise/spots 3-5 days per
+                      Moderately active (Moderate exercise/spots 3-5 days per
                       week)
                     </SelectItem>
                     <SelectItem value="very_active">
-                      Very active(Hard exercise/sports 6-7 days a week)
+                      Very active (Hard exercise/sports 6-7 days a week)
                     </SelectItem>
                     <SelectItem value="super_active">
-                      Super active(Intense exercise everyday)
+                      Super active (Intense exercise everyday)
                     </SelectItem>
                   </SelectContent>
                 </Select>
@@ -275,6 +284,7 @@ export default function Calculator() {
             </FormItem>
           )}
         />
+
         <Button type="submit" className="m-1">
           Submit
         </Button>

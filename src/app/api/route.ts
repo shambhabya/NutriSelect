@@ -60,14 +60,10 @@ export async function POST(request: NextRequest) {
     const carbsCalorieIntake =
       totalCaloricIntake - fatsCalorieIntake - proteinCalorieIntake;
 
-    const breakfastCalories = Math.round(0.3 * totalCaloricIntake);
-    const lunchCalories = Math.round(0.35 * totalCaloricIntake);
-    const dinnerCalories = Math.round(0.35 * totalCaloricIntake);
-
     // const breakfastItems = [];
     const lunchItems = [];
     const dinnerItems = [];
-    const meals = getMeals(foodData);
+    const meals = getMeals(foodData, vegNonVeg);
 
     return NextResponse.json({
       bmi,

@@ -8,9 +8,11 @@ type ProgressBarProps = {
 
 const getColor = (progress: number, totalCalorie: number): string => {
   if (progress < totalCalorie / 2) {
-    return "bg-red-500";
+    return "bg-yellow-100";
   } else if (progress < (3 * totalCalorie) / 4) {
-    return "bg-yellow-500";
+    return "bg-yellow-300";
+  } else if (progress > totalCalorie) {
+    return "bg-red-500";
   } else {
     return "bg-green-500";
   }
@@ -30,7 +32,9 @@ const ProgressBar: React.FC<ProgressBarProps> = ({
         <div className="h-4 rounded-full bg-gray-200 dark:bg-gray-700">
           <div
             className={`h-full rounded-full ${colorClass}`}
-            style={{ width: `${calorie}%` }}
+            style={{
+              width: `${Math.min((calorie * 100) / totalCalorie, 100)}%`,
+            }}
           />
         </div>
       </div>

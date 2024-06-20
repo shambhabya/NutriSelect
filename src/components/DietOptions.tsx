@@ -1,13 +1,17 @@
 import { useDietContext } from "@/context/dietDataContext";
 import { useMyDietContext } from "@/context/myDietContext";
 import React, { useEffect } from "react";
+import { number } from "zod";
 
 export interface FoodItem {
   name: string;
   Breakfast: number;
   Lunch: number;
-  Snacks: number;
   Dinner: number;
+  Diabetes: number;
+  LactoseIntolerant: number;
+  Thyroid: number;
+  VegNonVeg: number;
   Category: string;
   calories: number;
   serving_size_g: number;
@@ -28,57 +32,106 @@ const DietOptions: React.FC<{
   const { myDiet, setMyDiet } = useMyDietContext();
   const { dietItems } = useDietContext();
 
-  useEffect(() => {
-    console.log("2");
-  }, [myDiet]);
-
   // useEffect(() => {
   //   console.log("2");
   // }, [dietItems]);
 
-  const updateMyDiet = (itemName: string, operation: string) => {
+  const updateMyDiet = (item: FoodItem, operation: string) => {
     setMyDiet((prevMyDiet) => {
-      // Creating a copy of the previous state to avoid direct mutation
       const newDiet = { ...prevMyDiet };
 
       switch (dietTime) {
         case "morning":
           newDiet.breakfastItems = { ...newDiet.breakfastItems };
-          if (operation === "increment") {
-            newDiet.breakfastItems[itemName] =
-              (newDiet.breakfastItems[itemName] || 0) + 1;
+          if (!newDiet.breakfastItems[item.name]) {
+            // Create a new item if it's not present
+            newDiet.breakfastItems[item.name] = {
+              count: 0,
+              calories: item.calories,
+              fat_total_g: item.fat_total_g,
+              carbohydrates_total_g: item.carbohydrates_total_g,
+              protein_g: item.protein_g,
+            };
+            if (operation === "increment") {
+              newDiet.breakfastItems[item.name].count = 1;
+            }
+          } else if (operation === "increment") {
+            // Increment count if the item exists
+            newDiet.breakfastItems[item.name] = {
+              ...newDiet.breakfastItems[item.name],
+              count: newDiet.breakfastItems[item.name].count + 1,
+            };
           } else if (
             operation === "decrement" &&
-            (newDiet.breakfastItems[itemName] || 0) > 0
+            newDiet.breakfastItems[item.name].count > 0
           ) {
-            newDiet.breakfastItems[itemName] =
-              (newDiet.breakfastItems[itemName] || 0) - 1;
+            newDiet.breakfastItems[item.name] = {
+              ...newDiet.breakfastItems[item.name],
+              count: newDiet.breakfastItems[item.name].count - 1,
+            };
           }
           break;
         case "afternoon":
           newDiet.lunchItems = { ...newDiet.lunchItems };
-          if (operation === "increment") {
-            newDiet.lunchItems[itemName] =
-              (newDiet.lunchItems[itemName] || 0) + 1;
+          if (!newDiet.lunchItems[item.name]) {
+            // Create a new item if it's not present
+            newDiet.lunchItems[item.name] = {
+              count: 1,
+              calories: item.calories,
+              fat_total_g: item.fat_total_g,
+              carbohydrates_total_g: item.carbohydrates_total_g,
+              protein_g: item.protein_g,
+            };
+            if (operation === "increment") {
+              newDiet.lunchItems[item.name].count = 1;
+            }
+          } else if (operation === "increment") {
+            // Increment count if the item exists
+            newDiet.lunchItems[item.name] = {
+              ...newDiet.lunchItems[item.name],
+              count: newDiet.lunchItems[item.name].count + 1,
+            };
           } else if (
             operation === "decrement" &&
-            (newDiet.lunchItems[itemName] || 0) > 0
+            newDiet.lunchItems[item.name].count > 0
           ) {
-            newDiet.lunchItems[itemName] =
-              (newDiet.lunchItems[itemName] || 0) - 1;
+            // Decrement count if the item exists and count > 0
+            newDiet.lunchItems[item.name] = {
+              ...newDiet.lunchItems[item.name],
+              count: newDiet.lunchItems[item.name].count - 1,
+            };
           }
           break;
         case "night":
           newDiet.dinnerItems = { ...newDiet.dinnerItems };
-          if (operation === "increment") {
-            newDiet.dinnerItems[itemName] =
-              (newDiet.dinnerItems[itemName] || 0) + 1;
+          if (!newDiet.dinnerItems[item.name]) {
+            // Create a new item if it's not present
+            newDiet.dinnerItems[item.name] = {
+              count: 1,
+              calories: item.calories,
+              fat_total_g: item.fat_total_g,
+              carbohydrates_total_g: item.carbohydrates_total_g,
+              protein_g: item.protein_g,
+            };
+
+            if (operation === "increment") {
+              newDiet.dinnerItems[item.name].count = 1;
+            }
+          } else if (operation === "increment") {
+            // Increment count if the item exists
+            newDiet.dinnerItems[item.name] = {
+              ...newDiet.dinnerItems[item.name],
+              count: newDiet.dinnerItems[item.name].count + 1,
+            };
           } else if (
             operation === "decrement" &&
-            (newDiet.dinnerItems[itemName] || 0) > 0
+            newDiet.dinnerItems[item.name].count > 0
           ) {
-            newDiet.dinnerItems[itemName] =
-              (newDiet.dinnerItems[itemName] || 0) - 1;
+            // Decrement count if the item exists and count > 0
+            newDiet.dinnerItems[item.name] = {
+              ...newDiet.dinnerItems[item.name],
+              count: newDiet.dinnerItems[item.name].count - 1,
+            };
           }
           break;
         default:
@@ -102,22 +155,42 @@ const DietOptions: React.FC<{
             {value.map((item, index) => (
               <li
                 key={index}
-                className="text-sm font-light border rounded-md p-1"
+                className="text-sm font-light border-2 border-purple-300 rounded-md p-2"
               >
-                <div>
-                  {item.name.charAt(0).toUpperCase() + item.name.slice(1)}
+                <div className="flex flex-col justify-center items-center">
+                  <div className="text-lg font-medium mb-2">
+                    {item.name.charAt(0).toUpperCase() + item.name.slice(1)}
+                  </div>
+                  <div>Serving Size: {item.serving_size_g} g</div>
+                  <div>Total Calories: {item.calories}</div>
+                  <div>Protein: {item.protein_g} gm</div>
+                  <div>Fats: {item.fat_total_g} gm</div>
+                  <div className="mb-2">
+                    Carbs: {item.carbohydrates_total_g} gm
+                  </div>
                 </div>
-                <div className="flex justify-center gap-1 bg-slate-300">
+                <div className="flex justify-center gap-4 bg-slate-300 px-2 font-semibold text-xl">
                   <div
                     className="cursor-pointer"
-                    onClick={() => updateMyDiet(item.name, "increment")}
+                    onClick={() => updateMyDiet(item, "increment")}
                   >
                     +
                   </div>
-                  <div className="">{}</div>
+                  <div className="">
+                    {dietTime === "morning" && (
+                      <div>{myDiet.breakfastItems[item.name]?.count ?? 0}</div>
+                    )}
+                    {dietTime === "afternoon" && (
+                      <div>{myDiet.lunchItems[item.name]?.count ?? 0}</div>
+                    )}
+                    {dietTime === "night" && (
+                      <div>{myDiet.dinnerItems[item.name]?.count ?? 0}</div>
+                    )}
+                  </div>
+
                   <div
                     className="cursor-pointer"
-                    onClick={() => updateMyDiet(item.name, "decrement")}
+                    onClick={() => updateMyDiet(item, "decrement")}
                   >
                     -
                   </div>

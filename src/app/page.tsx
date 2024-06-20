@@ -1,37 +1,28 @@
 "use client";
 import Calculator from "@/components/Calculator";
 import DietPlanner from "@/components/DietPlanner";
-import Navbar from "@/components/Navbar";
-import { Button } from "@/components/ui/button";
+import Homepage from "@/components/Homepage";
+import MyDietPreview from "@/components/MyDietPreview";
+import Tools from "@/components/Tools";
 import { useDietContext } from "@/context/dietDataContext";
-import { useMyDietContext } from "@/context/myDietContext";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 export default function Home() {
-  const { dietItems, setDietItems } = useDietContext();
-  const { myDiet, setMyDiet } = useMyDietContext();
-
-  useEffect(() => {
-    console.log("1-");
-  }, [myDiet]);
+  const { dietItems } = useDietContext();
+  const [myDisease, setMyDisease] = useState(["no disease"]);
 
   return (
-    <main className="h-screen bg-green-200 overflow-scroll">
-      <Navbar />
-      <Calculator />
-      <DietPlanner />
-      <Button
-        onClick={() => {
-          console.log("ok");
-          setMyDiet({
-            breakfastItems: {},
-            lunchItems: {},
-            dinnerItems: {},
-          });
-        }}
-      >
-        yoo
-      </Button>
+    <main className=" bg-gradient-to-b from-custom-light-blue to-orange-100 overflow-scroll">
+      <Homepage />
+      <Tools />
+      <div className="h-screen  flex justify-center items-center">
+        <Calculator myDisease={myDisease} setMyDisease={setMyDisease} />
+      </div>
+
+      <div id="dietPlanner">
+        {Object.keys(dietItems.breakfast).length != 0 && <DietPlanner />}
+        {Object.keys(dietItems.breakfast).length != 0 && <MyDietPreview />}
+      </div>
     </main>
   );
 }

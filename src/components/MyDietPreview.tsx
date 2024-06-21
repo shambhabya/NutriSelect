@@ -31,10 +31,10 @@ const MyDietPreview = () => {
           <div className="w-full flex flex-col items-center">
             <div className="p-2 m-3 rounded bg-slate-200">Breakfast</div>
             <div className="text-lg font-medium">
-              {Object.keys(myDiet.breakfastItems).map((item) => {
+              {Object.keys(myDiet.breakfastItems).map((item, index) => {
                 if (myDiet.breakfastItems[item].count !== 0) {
                   return (
-                    <div>
+                    <div key={index}>
                       {item.charAt(0).toUpperCase() + item.slice(1)} x{" "}
                       {myDiet.breakfastItems[item].count}
                     </div>
@@ -47,10 +47,10 @@ const MyDietPreview = () => {
           <div className="w-full flex flex-col items-center">
             <div className="p-2 m-3 rounded bg-slate-200">Lunch</div>
             <div className="text-lg font-medium">
-              {Object.keys(myDiet.lunchItems).map((item) => {
+              {Object.keys(myDiet.lunchItems).map((item, index) => {
                 if (myDiet.lunchItems[item].count !== 0) {
                   return (
-                    <div>
+                    <div key={index}>
                       {item.charAt(0).toUpperCase() + item.slice(1)} x{" "}
                       {myDiet.lunchItems[item].count}
                     </div>
@@ -63,10 +63,10 @@ const MyDietPreview = () => {
           <div className="w-full flex flex-col items-center">
             <div className="p-2 m-3 rounded bg-slate-200">Dinner</div>
             <div className="text-lg font-medium">
-              {Object.keys(myDiet.dinnerItems).map((item) => {
+              {Object.keys(myDiet.dinnerItems).map((item, index) => {
                 if (myDiet.dinnerItems[item].count !== 0) {
                   return (
-                    <div>
+                    <div key={index}>
                       {item.charAt(0).toUpperCase() + item.slice(1)} x{" "}
                       {myDiet.dinnerItems[item].count}
                     </div>

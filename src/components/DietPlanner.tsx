@@ -3,10 +3,13 @@ import DietBar from "./DietBar";
 import DietOptions from "./DietOptions";
 import { useDietContext } from "@/context/dietDataContext";
 import { useMyDietContext } from "@/context/myDietContext";
+import { Button } from "./ui/button";
+import { useRouter } from "next/navigation";
 
-const DietPlanner = () => {
+const DietPlanner = ({ myDisease }: any) => {
   const { dietItems } = useDietContext();
   const { myDiet } = useMyDietContext();
+  const router = useRouter();
 
   const [dietTime, setDietTime] = useState("morning");
   const [totalRequiredCaloriesCompleted, setTotalRequiredCaloriesCompleted] =
@@ -88,6 +91,10 @@ const DietPlanner = () => {
         your daily calorie requirement is {dietItems.totalCaloricIntake}{" "}
         calories. This intake will support maintaining a healthy and fit body.
       </div>
+      <div className="px-10">
+        Food Items marked with <span className="text-red-500">Red Border</span>{" "}
+        are asked to be consume in moderation based on disease or allergy.
+      </div>
       <div className="flex w-full px-10 h-4/5">
         <div className="flex flex-col w-5/6 bg-white mr-1 my-3  rounded-lg border-2">
           <div className="flex justify-between ">
@@ -118,13 +125,25 @@ const DietPlanner = () => {
           </div>
           <div className="h-full overflow-scroll">
             {dietTime === "morning" && (
-              <DietOptions diet={dietItems.breakfast} dietTime={dietTime} />
+              <DietOptions
+                diet={dietItems.breakfast}
+                dietTime={dietTime}
+                myDisease={myDisease}
+              />
             )}
             {dietTime === "afternoon" && (
-              <DietOptions diet={dietItems.lunch} dietTime={dietTime} />
+              <DietOptions
+                diet={dietItems.lunch}
+                dietTime={dietTime}
+                myDisease={myDisease}
+              />
             )}
             {dietTime === "night" && (
-              <DietOptions diet={dietItems.dinner} dietTime={dietTime} />
+              <DietOptions
+                diet={dietItems.dinner}
+                dietTime={dietTime}
+                myDisease={myDisease}
+              />
             )}
           </div>
         </div>
@@ -156,6 +175,15 @@ const DietPlanner = () => {
               completedTotalCalorie={totalRequiredCaloriesCompleted}
             />
           )}
+          <div className="flex justify-center items-center mt-6">
+            <Button
+              onClick={() => {
+                router.push("#preview");
+              }}
+            >
+              Create Diet
+            </Button>
+          </div>
         </div>
       </div>
     </div>

@@ -58,8 +58,11 @@ export function determineCaloricIntake(bmi: number, amr: number): number {
     return amr - 500; // Decrease intake for overweight/obese
   }
 }
-
-export function getMeals(foodData: FoodItem[], vegNonVeg: string) {
+export function getMeals(
+  foodData: FoodItem[],
+  vegNonVeg: string,
+  diseases: string[]
+) {
   const meals: Meals = {
     Breakfast: {},
     Lunch: {},
@@ -67,6 +70,14 @@ export function getMeals(foodData: FoodItem[], vegNonVeg: string) {
   };
 
   foodData.forEach((food) => {
+    if (
+      food.LactoseIntolerant === 0 &&
+      diseases.includes("lactose intolerant")
+    ) {
+      // Skip lactose intolerant food when the user is lactose intolerant
+      return;
+    }
+
     if (food.Breakfast === 1) {
       if (vegNonVeg === "veg" && food.VegNonVeg === 1) {
         // Skip non-vegetarian food when vegNonVeg is "veg"

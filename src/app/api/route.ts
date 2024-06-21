@@ -63,7 +63,7 @@ export async function POST(request: NextRequest) {
     // const breakfastItems = [];
     const lunchItems = [];
     const dinnerItems = [];
-    const meals = getMeals(foodData, vegNonVeg);
+    const meals = getMeals(foodData, vegNonVeg, diseases);
 
     return NextResponse.json({
       bmi,

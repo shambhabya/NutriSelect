@@ -26,6 +26,7 @@ import { Checkbox } from "./ui/checkbox";
 import { useDietContext } from "@/context/dietDataContext";
 import axios from "axios";
 import { useMyDietContext } from "@/context/myDietContext";
+import { useRouter } from "next/navigation";
 
 const diseases = [
   {
@@ -66,6 +67,7 @@ export const formSchema = z.object({
 
 export default function Calculator({ myDisease, setMyDisease }: any) {
   const { dietItems, setDietItems } = useDietContext();
+  const router = useRouter();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -81,7 +83,7 @@ export default function Calculator({ myDisease, setMyDisease }: any) {
 
   // 2. Define a submit handler.
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values);
+    console.log("values", values);
     const newValues = values;
     try {
       const res = await axios.post("/api", values);
@@ -93,6 +95,7 @@ export default function Calculator({ myDisease, setMyDisease }: any) {
         dinnerItems: {},
       });
       setMyDisease(values.diseases);
+      router.push("#diet");
     } catch (error) {
       console.log(error);
     }
@@ -110,7 +113,7 @@ export default function Calculator({ myDisease, setMyDisease }: any) {
             name="age"
             render={({ field }) => (
               <FormItem className="p-1">
-                <FormLabel>Age</FormLabel>
+                <FormLabel>Age(15-80)</FormLabel>
                 <FormControl>
                   <Input placeholder="Age" {...field} />
                 </FormControl>
@@ -285,7 +288,7 @@ export default function Calculator({ myDisease, setMyDisease }: any) {
           )}
         />
 
-        <Button type="submit" className="m-1">
+        <Button type="submit" className="">
           Submit
         </Button>
       </form>

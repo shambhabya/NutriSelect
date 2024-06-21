@@ -15,12 +15,19 @@ export default function Home() {
     <main className=" bg-gradient-to-b from-custom-light-blue to-orange-100 overflow-scroll">
       <Homepage />
       <Tools />
-      <div className="h-screen  flex justify-center items-center">
+      <div
+        id="calculator"
+        className="h-screen  flex justify-center items-center"
+      >
         <Calculator myDisease={myDisease} setMyDisease={setMyDisease} />
       </div>
 
-      <div id="dietPlanner">
-        {Object.keys(dietItems.breakfast).length != 0 && <DietPlanner />}
+      <div id="diet">
+        {Object.keys(dietItems.breakfast).length != 0 && (
+          <DietPlanner myDisease={myDisease} />
+        )}
+      </div>
+      <div id="preview">
         {Object.keys(dietItems.breakfast).length != 0 && <MyDietPreview />}
       </div>
     </main>

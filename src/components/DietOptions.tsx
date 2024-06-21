@@ -1,7 +1,5 @@
-import { useDietContext } from "@/context/dietDataContext";
 import { useMyDietContext } from "@/context/myDietContext";
-import React, { useEffect } from "react";
-import { number } from "zod";
+import React from "react";
 
 export interface FoodItem {
   name: string;
@@ -28,9 +26,11 @@ export interface FoodItem {
 const DietOptions: React.FC<{
   diet: Record<string, FoodItem[]>;
   dietTime: string;
-}> = ({ diet, dietTime }) => {
+  myDisease: any;
+}> = ({ diet, dietTime, myDisease }) => {
   const { myDiet, setMyDiet } = useMyDietContext();
-  const { dietItems } = useDietContext();
+
+  console.log("myDIsease-", myDisease);
 
   // useEffect(() => {
   //   console.log("2");
@@ -142,6 +142,12 @@ const DietOptions: React.FC<{
     });
   };
 
+  const isSuitable = (item: FoodItem) => {
+    if (myDisease.includes("thyroid") && item.Thyroid === 0) return false;
+    if (myDisease.includes("diabetes") && item.Diabetes === 0) return false;
+    return true;
+  };
+
   return (
     <div className="p-3">
       {Object.entries(diet).map(([key, value]) => (
@@ -155,7 +161,9 @@ const DietOptions: React.FC<{
             {value.map((item, index) => (
               <li
                 key={index}
-                className="text-sm font-light border-2 border-purple-300 rounded-md p-2"
+                className={`text-sm font-light border-2 rounded-md p-2 ${
+                  isSuitable(item) ? "border-slate-300" : "border-red-300"
+                }`}
               >
                 <div className="flex flex-col justify-center items-center">
                   <div className="text-lg font-medium mb-2">

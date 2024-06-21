@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from "react";
 import ProgressBar from "./ProgressBar";
-import { Button } from "./ui/button";
 import { useMyDietContext } from "@/context/myDietContext";
-import { useDietContext } from "@/context/dietDataContext";
 
 const DietBard: React.FC<any> = ({
   calorieCount,

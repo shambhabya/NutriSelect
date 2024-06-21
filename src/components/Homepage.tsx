@@ -2,6 +2,7 @@ import Image from "next/image";
 import React from "react";
 import foodImg from "../../public/fruits.png";
 import eatLogo from "../../public/eatwell.png";
+import { Button } from "./ui/button";
 
 const Homepage = () => {
   return (

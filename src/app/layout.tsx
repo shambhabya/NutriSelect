@@ -7,7 +7,7 @@ import { DietProvider } from "@/context/myDietContext";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "My Indian Diet",
+  title: "NutriSelect",
   description: "Diet Recommendation App",
 };
 
